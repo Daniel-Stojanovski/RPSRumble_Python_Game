@@ -12,6 +12,10 @@ Implemented:
 - Camera Movement (pointer focus)
 - Player object Movement (forward, backwards, left, right, jump)
 
+Feature branch:
+  Commit 1:
+  - Basic Dash Mechanicism  
+
 Concept:
 
 Singleplayer/Multiplayer Third-Person Python Game based on Rock-Paper-Scissors.
