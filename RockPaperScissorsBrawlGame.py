@@ -1,10 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import WindowProperties, Vec3, Point3
-from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerPusher, CollisionBox, CollisionPlane, Plane, BitMask32
-from panda3d.core import NodePath, CardMaker
-from panda3d.core import LPoint3
+from panda3d.core import WindowProperties, Vec3, Point3, CollisionTraverser, CollisionNode, CollisionHandlerPusher, CollisionBox, CollisionPlane, Plane, BitMask32, NodePath, CardMaker, LPoint3, AmbientLight, DirectionalLight, Texture, PNMImage, PerspectiveLens
 from direct.task.Task import Task
-from panda3d.core import AmbientLight, DirectionalLight, Texture, PNMImage, PerspectiveLens
 import math
 
 class MyApp(ShowBase):
@@ -20,8 +16,6 @@ class MyApp(ShowBase):
         props.setCursorHidden(False)  # Ensure cursor is visible
         props.setMouseMode(WindowProperties.M_relative)  # Set the mouse mode to relative
         self.win.requestProperties(props)
-
-
 
         # Create a simple surface (ground) using CardMaker
         cm = CardMaker('ground')
@@ -97,6 +91,7 @@ class MyApp(ShowBase):
         self.accept("s-up", self.setKey, ["backward", False])
         self.accept("space", self.setKey, ["jump", True])
         self.accept("space-up", self.setKey, ["jump", False])
+        self.accept("mouse1", self.dash)
 
         self.keyMap = {
             "left": False,
@@ -110,6 +105,7 @@ class MyApp(ShowBase):
         self.gravity = Vec3(0, 0, -9.8)
         self.jumpImpulse = Vec3(0, 0, 10)
         self.isJumping = False
+        self.dashSpeed = 2  # Speed multiplier for dash
 
         # Update task
         self.taskMgr.add(self.update, "update")
@@ -131,6 +127,23 @@ class MyApp(ShowBase):
 
     def setKey(self, key, value):
         self.keyMap[key] = value
+
+    def dash(self):
+        # Define the dash distance multiplier
+        dash_distance_multiplier = 50
+
+        # Calculate the movement distance for the dash
+        move_distance = dash_distance_multiplier * 15 * globalClock.getDt()
+
+        # Determine the direction of the dash based on the currently pressed keys
+        if self.keyMap["forward"]:
+            self.cube.setY(self.cube, move_distance)
+        # elif self.keyMap["backward"]:
+        #     self.cube.setY(self.cube, -move_distance)
+        elif self.keyMap["left"]:
+            self.cube.setY(self.cube, move_distance)
+        elif self.keyMap["right"]:
+            self.cube.setY(self.cube, move_distance)
 
     def cameraFollow(self, task):
         # Calculate the offset from the cube's position
